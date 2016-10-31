@@ -62,4 +62,12 @@ public class DoorMan {
         return maxEntry.getKey();
     }
 
+    public int getSpace() {
+        int leftSpaces = 0;
+        for (Map.Entry<String, ParkingLot> parkingLot : this.parkingLots.entrySet()) {
+            leftSpaces += parkingLot.getValue().getSize() - parkingLot.getValue().getSpaces().size();
+        }
+        return leftSpaces;
+    }
+
 }
