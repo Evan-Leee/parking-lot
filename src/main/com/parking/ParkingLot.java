@@ -6,6 +6,7 @@ import java.util.List;
 public class ParkingLot {
 
     private List<String> spaces;
+
     private int size;
 
     public ParkingLot () {
@@ -33,4 +34,17 @@ public class ParkingLot {
     public void removeCar(String carId) {
         this.spaces.remove(carId);
     }
+
+    public int getSize() {
+        return size;
+    }
+
+    public List<String> getSpaces() {
+        return spaces;
+    }
+
+    public int getRemains () {
+        return (this.size - this.spaces.size());
+    }
+
 }

@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
@@ -27,8 +28,14 @@ public class DoorManTest {
     @Before
     public void setUp() {
         when(fullParkingLot.isFull()).thenReturn(true);
+        when(fullParkingLot.getRemains()).thenReturn(0);
+
         when(notFullParkingLot_1.isFull()).thenReturn(false);
+        when(notFullParkingLot_1.getRemains()).thenReturn(2);
+
         when(notFullParkingLot_2.isFull()).thenReturn(false);
+        when(notFullParkingLot_2.getRemains()).thenReturn(4);
+
         doorMan = new DoorMan();
     }
 
@@ -41,15 +48,23 @@ public class DoorManTest {
     }
 
     @Test
-    public void testShouldReturnTrueWhenParkSuccess () {
+    public void testShouldReturnParkingLotNumberWhichIsMoreSpace () {
+        doorMan.getParkingLots().put("parkingLot_1", fullParkingLot);
+        doorMan.getParkingLots().put("parkingLot_2", notFullParkingLot_1);
+        doorMan.getParkingLots().put("parkingLot_3", notFullParkingLot_2);
+        assertThat(doorMan.findSuitableParkingLot(), is("parkingLot_3"));
+    }
 
-        assertThat(doorMan.park("car", notFullParkingLot_1), is(true));
+    @Test
+    public void testShouldReturnTrueWhenParkSuccess () {
+        doorMan.getParkingLots().put("parkingLot_3", notFullParkingLot_2);
+        assertThat(doorMan.park("car"), is(true));
     }
 
     @Test
     public void testShouldReturnFalseWhenParkSuccess () {
-
-        assertThat(doorMan.park("car", fullParkingLot), is(false));
+        doorMan.getParkingLots().put("parkingLot_1", fullParkingLot);
+        assertThat(doorMan.park("car"), is(false));
     }
 
 

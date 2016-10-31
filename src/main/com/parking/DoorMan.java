@@ -2,6 +2,7 @@ package com.parking;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DoorMan {
 
@@ -27,11 +28,38 @@ public class DoorMan {
         return "";
     }
 
-    public Boolean park(String carId, ParkingLot parkingLot) {
+    public Boolean park(String carId) {
+
+        if(findAvailableParkingLot().isEmpty()){
+            return false;
+        }
+
+        ParkingLot parkingLot = this.parkingLots.get(findAvailableParkingLot());
         Boolean isAvailable = !parkingLot.isFull();
         if(isAvailable){
             parkingLot.addCar(carId);
         }
         return isAvailable;
     }
+
+    public String findSuitableParkingLot() {
+        Map<String, Integer> parkingLotRemains = this.parkingLots.entrySet().stream()
+                .collect(Collectors.toMap(
+                        elem -> elem.getKey(),
+                        elem -> elem.getValue().getRemains()
+                ));
+
+        Map.Entry<String, Integer> maxEntry = null;
+
+        for (Map.Entry<String, Integer> entry : parkingLotRemains.entrySet())
+        {
+            if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
+            {
+                maxEntry = entry;
+            }
+        }
+
+        return maxEntry.getKey();
+    }
+
 }
